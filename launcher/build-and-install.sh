@@ -186,7 +186,13 @@ case "$HOME_NOW" in
       echo "ERROR: Home resolves to $HOME_NOW, not to the new launcher." >&2
     fi
     rollback_home || true
-    if [ -n "$HOME_NOW" ]; then
+    if [ -n "$HOME_NOW" ] && [ "$STOCK_LAUNCHER" = none ]; then
+      # Nothing was disabled, so the stock launcher is still enabled and can outrank this one: on a
+      # realme Smart TV (Android 11) set-home-activity printed Success while the stock launcher (priority 2
+      # against 0) kept Home. Name that before the setup-wizard hint below, which does not apply.
+      echo "STOCK_LAUNCHER=none left $HOME_NOW enabled, and an enabled stock launcher can outrank this one even" >&2
+      echo "after set-home-activity. Run again with STOCK_LAUNCHER=<its package> to disable it (undo: tools/restore.sh)." >&2
+    elif [ -n "$HOME_NOW" ]; then
       echo "On Google TV this usually means com.google.android.tungsten.setupwraith also claims Home: add it to" >&2
       echo "your debloat list (see README, Troubleshooting), apply the list, then run this script again." >&2
     fi

@@ -94,6 +94,9 @@ if ($homeNow -notlike 'com.gathin.tvhome/*') {
         # set-home-activity needs pkg/activity on Android 9, so resolve the stock component on the TV.
         & $py -I ..\tools\tv.py "cmd package set-home-activity --user 0 `$(cmd package resolve-activity --brief -a android.intent.action.MAIN -c android.intent.category.HOME $StockLauncher | tail -n 1)" | Out-Null
     }
+    if ($StockLauncher -eq 'none') {
+        throw "Home resolves to '$homeNow', not to the new launcher. -StockLauncher none left that launcher enabled, and an enabled stock launcher can outrank this one even after set-home-activity. Run again with -StockLauncher <its package> to disable it (undo: tools\restore.ps1)."
+    }
     throw "Home resolves to '$homeNow', not to the new launcher; $StockLauncher was re-enabled. On Google TV this usually means com.google.android.tungsten.setupwraith also claims Home: add it to your debloat list (see README, Troubleshooting), apply it, then run this script again."
 }
 Write-Host "Home now resolves to $homeNow"
