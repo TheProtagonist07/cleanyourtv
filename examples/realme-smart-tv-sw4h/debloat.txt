@@ -1,0 +1,51 @@
+# realme Smart TV (ro.product.model "realme Smart TV", product SW4H_FF_realme, device SW4H, Skyworth-built,
+# MediaTek), Android TV 11 (API 30), ~1.7 GB RAM. Classic Android TV home, not Google TV.
+#
+# Stock launcher:  com.google.android.tvlauncher
+# Live TV app:     com.smartdevice.livetv (answers channel VIEW; HDMI/tuner via com.mediatek.tvinput)
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh examples/realme-smart-tv-sw4h/debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh examples/realme-smart-tv-sw4h/debloat.txt
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# Disabled before this debloat, so not listed (restore.sh would turn them ON): com.sky.market,
+# com.smartdevice.dtv.icast, com.smartdevice.tvworkwithalexa.
+#
+# Firmware RTM5.220609.106. Applied on 2026-10-25 in two batches with a screenshot after each. After a reboot
+# `pm list packages -d` matched exactly: this firmware re-enables nothing at boot. Home, Settings, YouTube,
+# Live TV and the Bluetooth remote checked; the owner reported it "looks and feels good" the same day.
+# com.mediatek.wwtv.tvrecommendation is left out: disable.sh skips it because it asks for TV_INPUT_HARDWARE.
+# The remote's mic button reaches the Assistant but no voice audio arrives; not traced to this list.
+#
+# Launcher: launcher/build-and-install.sh with STOCK_LAUNCHER=com.google.android.tvlauncher. With the stock
+# launcher left enabled, set-home-activity prints Success but Home stays with the stock launcher (it has
+# priority 2 against 0), so the stock launcher has to be disabled for the new Home to take over.
+# Undo: tools/restore.sh <this list> com.google.android.tvlauncher
+#
+# A saved Wi-Fi network belongs to com.google.android.tungsten.setupwraith: leave it enabled.
+#
+# Kept on purpose: com.smartdevice.livetv, com.mediatek.tvinput, com.mediatek.tv.agent (hot keys, TV input),
+# com.smartdevice.duplebluetooth (remote pairing), com.smartdevice.firewall (purpose unclear, boot receiver),
+# com.smartdevice.factory and mediatek.factorymenu.ui (never launched), com.mediatek.wwtv.setupwizard,
+# com.mediatek.OledFuctionService, com.mediatek.network, com.mediatek.partner.netflix (Netflix key),
+# com.tianci.localmedia (USB media), Play Store + Play Services, Gboard + leankeyboard.
+
+# Telemetry
+com.google.android.feedback
+com.smartdevice.acr.recommendation           # ACR: recognises what is on screen for recommendations
+
+# Skyworth/MediaTek content rows, ads and demos
+com.smartdevice.epopplayer                   # ePop shop demo player, starts at boot
+fusion.android.tv.demo                       # retail demo
+com.smartdevice.speedchannels                # promoted channel rows; notification listener, self-updater
+com.mediatek.wwtv.tvrecommendation           # recommendation feed, boot receiver
+com.google.android.tvrecommendations         # home-screen recommendation rows
+com.smartdevice.leanbacklauncher.customizer  # partner config that injects rows into the home screen
+com.google.android.leanbacklauncher.partnercustomizer
+android.autoinstalls.config.SW               # Play auto-installs of partner apps
+com.mstar.android.tv.disclaimercustomization # retail legal-disclaimer dialogs
+
+# Preloads
+com.qjy.browser                              # bundled browser, can request installs
+com.homwee.howtocast                         # casting tutorial
+com.android.printspooler
